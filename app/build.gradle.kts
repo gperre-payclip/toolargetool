@@ -1,39 +1,33 @@
 plugins {
-    id("com.android.application")
-    kotlin("android")
+    alias(clipLibs.plugins.android.application)
+    alias(clipLibs.plugins.blaze.configuration)
 }
 
 android {
-    namespace = "com.gu.toolargetool.sample"
-    compileSdk = 34
+    namespace = "com.payclip.blaze.toolargetool.sample"
+
     defaultConfig {
-        applicationId = "com.gu.toolargetool.sample"
-        versionCode = 1
-        versionName = "1.0"
-        minSdk = 21
-        targetSdk = 33
+        applicationId = "com.payclip.blaze.toolargetool.sample"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-    buildTypes {
-        val debug by getting {
-            isMinifyEnabled = false
-        }
-        val release by getting {
-            isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
+
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = clipLibs.versions.jvmTarget.get()
+    }
+
+    packaging {
+        resources {
+            excludes += "AndroidManifest.xml"
+        }
     }
 }
 
 dependencies {
-    implementation(libs.kotlin.stdlib)
-    implementation(libs.appcompat)
+    // Clip
+    implementation(clipLibs.clip.lint.checks)
+
+    // Kotlin
+    implementation(clipLibs.kotlin.stdlib)
+
     implementation(project(path = ":toolargetool"))
 }
