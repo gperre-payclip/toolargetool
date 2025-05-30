@@ -1,4 +1,4 @@
-package com.gu.toolargetool
+package com.payclip.blaze.toolargetool
 
 import android.app.Activity
 import android.os.Bundle
@@ -17,15 +17,18 @@ interface Formatter {
 /**
  * The default implementation of [Formatter].
  *
- * @author [@sfriedenberg](https://github.com/friedenberg)
  */
 class DefaultFormatter: Formatter {
     override fun format(activity: Activity, bundle: Bundle): String {
-        return activity.javaClass.simpleName + ".onSaveInstanceState wrote: " + TooLargeTool.bundleBreakdown(bundle)
+        return activity.javaClass.simpleName + ".onSaveInstanceState wrote: " + TooLargeTool.bundleBreakdown(
+            bundle
+        )
     }
 
     override fun format(fragmentManager: FragmentManager, fragment: Fragment, bundle: Bundle): String {
-        var message = fragment.javaClass.simpleName + ".onSaveInstanceState wrote: " + TooLargeTool.bundleBreakdown(bundle)
+        var message = fragment.javaClass.simpleName + ".onSaveInstanceState wrote: " + TooLargeTool.bundleBreakdown(
+            bundle
+        )
         val fragmentArguments = fragment.arguments
         if (fragmentArguments != null) {
             message += "\n* fragment arguments = " + TooLargeTool.bundleBreakdown(fragmentArguments)

@@ -1,4 +1,4 @@
-package com.gu.toolargetool.sample
+package com.payclip.blaze.toolargetool.sample
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 class TestFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
         return inflater.inflate(R.layout.fragment_test, container, false)
     }
 

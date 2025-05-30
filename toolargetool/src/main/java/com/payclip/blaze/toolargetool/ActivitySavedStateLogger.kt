@@ -1,4 +1,4 @@
-package com.gu.toolargetool
+package com.payclip.blaze.toolargetool
 
 import android.app.Activity
 import android.app.Application
@@ -11,9 +11,9 @@ import java.util.*
  * about the saved state of Activities.
  */
 class ActivitySavedStateLogger(
-        private val formatter: Formatter,
-        private val logger: Logger,
-        logFragments: Boolean
+    private val formatter: Formatter,
+    private val logger: Logger,
+    logFragments: Boolean
 ) : Application.ActivityLifecycleCallbacks {
 
     private val fragmentLogger = if (logFragments) FragmentSavedStateLogger(formatter, logger) else null

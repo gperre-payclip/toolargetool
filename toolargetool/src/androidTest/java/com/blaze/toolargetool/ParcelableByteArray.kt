@@ -1,4 +1,4 @@
-package com.gu.toolargetool
+package com.blaze.toolargetool
 
 import android.os.Parcel
 import android.os.Parcelable

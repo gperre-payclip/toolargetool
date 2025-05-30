@@ -1,4 +1,4 @@
-package com.gu.toolargetool
+package com.payclip.blaze.toolargetool
 
 import android.app.Application
 import android.os.Bundle

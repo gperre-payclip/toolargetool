@@ -1,4 +1,4 @@
-package com.gu.toolargetool
+package com.payclip.blaze.toolargetool
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

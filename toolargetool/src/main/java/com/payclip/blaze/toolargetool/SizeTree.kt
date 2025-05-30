@@ -1,4 +1,4 @@
-package com.gu.toolargetool
+package com.payclip.blaze.toolargetool
 
 /**
  * Abstract base class representing a tree of items/subtrees with sizes.

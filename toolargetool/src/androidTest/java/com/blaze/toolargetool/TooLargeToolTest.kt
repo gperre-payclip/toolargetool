@@ -1,7 +1,9 @@
-package com.gu.toolargetool
+package com.blaze.toolargetool
 
 import android.graphics.Point
 import android.os.Bundle
+import com.payclip.blaze.toolargetool.sizeAsParcel
+import com.payclip.blaze.toolargetool.sizeTreeFromBundle
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.ComparisonFailure

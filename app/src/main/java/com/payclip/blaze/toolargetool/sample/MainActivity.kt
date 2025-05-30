@@ -1,9 +1,7 @@
-package com.gu.toolargetool.sample
+package com.payclip.blaze.toolargetool.sample
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-
-import com.gu.toolargetool.TooLargeTool
+import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
