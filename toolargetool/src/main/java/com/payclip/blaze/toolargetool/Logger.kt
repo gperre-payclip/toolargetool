@@ -1,5 +1,7 @@
 package com.payclip.blaze.toolargetool
 
+import android.app.Activity
+import android.os.Bundle
 import android.util.Log
 import com.payclip.blaze.commons.analytics.Analytics
 import com.payclip.blaze.commons.analytics.AnalyticsProperties
@@ -12,6 +14,7 @@ import com.payclip.blaze.commons.analytics.engines.ErrorContext
  */
 interface Logger {
     fun log(msg: String)
+    fun log(activity: Activity, bundle: Bundle)
     fun logException(e: Exception)
 }
 
@@ -30,7 +33,16 @@ class LogcatLogger(
 
     override fun log(msg: String) {
         Log.println(priority, tag, msg)
-        trackBundle(msg)
+    }
+
+    override fun log(activity: Activity, bundle: Bundle) {
+        val description = TooLargeTool.simpleBundleBreakdown(bundle)
+        val content = TooLargeTool.contentBundleBreakdown(bundle)
+        val msg = TooLargeTool.bundleBreakdown(bundle)
+
+        Log.println(priority, tag, msg)
+
+        trackBundle(activity, description, content)
     }
 
     override fun logException(e: Exception) {
@@ -38,10 +50,16 @@ class LogcatLogger(
         trackException(e)
     }
 
-    private fun trackBundle(msg: String) {
+    private fun trackBundle(
+        activity: Activity,
+        description: String,
+        content: String
+    ) {
         val event = SEGMENT_ACTION_BUNDLE
         val params: AnalyticsProperties = hashMapOf(
-            SEGMENT_PARAM_MESSAGE to msg
+            SEGMENT_PARAM_ACTIVITY to activity.javaClass.simpleName,
+            SEGMENT_PARAM_DESCRIPTION to description,
+            SEGMENT_PARAM_CONTENT to content
         )
 
         analytics.trackEvent(
@@ -49,6 +67,8 @@ class LogcatLogger(
             properties = params
         )
     }
+
+
 
     private fun trackException(e: Exception) {
         analytics.trackError(
@@ -62,6 +82,8 @@ class LogcatLogger(
         private const val SEGMENT_ACTION_BUNDLE = "TRACK_BUNDLE_DEBUG"
 
         // Params
-        private const val SEGMENT_PARAM_MESSAGE = "tool_message"
+        private const val SEGMENT_PARAM_ACTIVITY = "activity_name"
+        private const val SEGMENT_PARAM_DESCRIPTION = "bundle_description"
+        private const val SEGMENT_PARAM_CONTENT = "bundle_content"
     }
 }

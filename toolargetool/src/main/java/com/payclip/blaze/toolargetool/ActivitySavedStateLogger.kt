@@ -46,8 +46,7 @@ class ActivitySavedStateLogger(
         val savedState = savedStates.remove(activity)
         if (savedState != null) {
             try {
-                val message = formatter.format(activity, savedState)
-                logger.log(message)
+                logger.log(activity, savedState)
             } catch (e: RuntimeException) {
                 logger.logException(e)
             }

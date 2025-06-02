@@ -73,6 +73,28 @@ object TooLargeTool {
         return result
     }
 
+    @JvmStatic
+    fun simpleBundleBreakdown(bundle: Bundle): String {
+        val (key, totalSize, subTrees) = sizeTreeFromBundle(bundle)
+
+        return String.format(
+            Locale.UK,
+            "%s, %d keys, measures %,.1f KB",
+            key, subTrees.size, KB(totalSize)
+        )
+    }
+
+    @JvmStatic
+    fun contentBundleBreakdown(bundle: Bundle): String {
+        val subTrees = sizeTreeFromBundleGreedy(bundle)
+        val largest = subTrees.subTrees.maxByOrNull { it.totalSize }
+        return if (largest != null) {
+            String.format(Locale.UK, "%s = %,.1f KB", largest.key, KB(largest.totalSize))
+        } else {
+            ""
+        }
+    }
+
     private fun KB(bytes: Int): Float {
         return bytes.toFloat() / 1000f
     }
@@ -151,6 +173,48 @@ fun sizeTreeFromBundle(bundle: Bundle): SizeTree {
         bundle.putAll(copy)
     }
     return SizeTree("Bundle" + System.identityHashCode(bundle), sizeAsParcel(bundle), results)
+}
+
+fun sizeTreeFromBundleGreedy(bundle: Bundle): SizeTree {
+    val results = ArrayList<SizeTree>(bundle.size())
+    val copy = Bundle(bundle)
+
+    try {
+        var bundleSize = sizeAsParcel(bundle)
+
+        for (key in copy.keySet()) {
+            bundle.remove(key)
+            val newBundleSize = sizeAsParcel(bundle)
+            val valueSize = bundleSize - newBundleSize
+
+            results.add(SizeTree(key, valueSize, emptyList()))
+            bundleSize = newBundleSize
+        }
+    } finally {
+        bundle.putAll(copy)
+    }
+
+    val heaviest = results.maxByOrNull { it.totalSize }
+
+    val finalResults = ArrayList<SizeTree>()
+
+    for (node in results) {
+        if (node == heaviest) {
+            val value = copy[node.key]
+            if (value is Bundle) {
+                val deepSubTree = sizeTreeFromBundleGreedy(value)
+                finalResults.add(
+                    SizeTree(node.key, node.totalSize, listOf(deepSubTree))
+                )
+            } else {
+                finalResults.add(node)
+            }
+        } else {
+            finalResults.add(node)
+        }
+    }
+
+    return SizeTree("Bundle" + System.identityHashCode(bundle), sizeAsParcel(bundle), finalResults)
 }
 
 /**
