@@ -86,12 +86,20 @@ object TooLargeTool {
 
     @JvmStatic
     fun contentBundleBreakdown(bundle: Bundle): String {
-        val subTrees = sizeTreeFromBundleGreedy(bundle)
-        val largest = subTrees.subTrees.maxByOrNull { it.totalSize }
-        return if (largest != null) {
-            String.format(Locale.UK, "%s = %,.1f KB", largest.key, KB(largest.totalSize))
+        val tree = sizeTreeFromBundleGreedy(bundle)
+        val leaf = findHeaviestLeaf(tree)
+
+        return String.format(Locale.UK, "%s = %,.1f KB", leaf.key, KB(leaf.totalSize))
+    }
+
+    private fun findHeaviestLeaf(tree: SizeTree): SizeTree {
+        return if (tree.subTrees.isEmpty()) {
+            tree
         } else {
-            ""
+            tree.subTrees
+                .map { findHeaviestLeaf(it) }
+                .maxByOrNull { it.totalSize }
+                ?: tree
         }
     }
 

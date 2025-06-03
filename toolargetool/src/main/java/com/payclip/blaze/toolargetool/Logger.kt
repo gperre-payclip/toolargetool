@@ -36,13 +36,19 @@ class LogcatLogger(
     }
 
     override fun log(activity: Activity, bundle: Bundle) {
-        val description = TooLargeTool.simpleBundleBreakdown(bundle)
-        val content = TooLargeTool.contentBundleBreakdown(bundle)
+        val size = sizeAsParcel(bundle)
         val msg = TooLargeTool.bundleBreakdown(bundle)
 
         Log.println(priority, tag, msg)
 
-        trackBundle(activity, description, content)
+        if (size > 0) { // TODO: Change to 500000
+            val description = TooLargeTool.simpleBundleBreakdown(bundle)
+            val content = TooLargeTool.contentBundleBreakdown(bundle)
+
+            Log.println(priority, tag, "Largest bundle: $content")
+
+            trackBundle(activity, description, content)
+        }
     }
 
     override fun logException(e: Exception) {
@@ -67,8 +73,6 @@ class LogcatLogger(
             properties = params
         )
     }
-
-
 
     private fun trackException(e: Exception) {
         analytics.trackError(
