@@ -37,11 +37,8 @@ class LogcatLogger(
 
     override fun log(activity: Activity, bundle: Bundle) {
         val size = sizeAsParcel(bundle)
-        val msg = TooLargeTool.bundleBreakdown(bundle)
 
-        Log.println(priority, tag, msg)
-
-        if (size > 0) { // TODO: Change to 500000
+        if (size > 500000) {
             val description = TooLargeTool.simpleBundleBreakdown(bundle)
             val content = TooLargeTool.contentBundleBreakdown(bundle)
 
